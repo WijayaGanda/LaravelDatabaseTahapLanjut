@@ -1,8 +1,7 @@
 @extends('layouts.app')
 @section('content')
-
     <div class="container-sm mt-5">
-        <form action="{{ route('employees.update', ['employee' => $employee->id]) }}" method="POST">
+        <form action="{{ route('employees.update', ['employee' => $employee->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row justify-content-center">
@@ -33,8 +32,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input class="form-control @error('email') is-invalid @enderror" type="text"
-                                name="email" id="email" value="{{ $employee->email }}" placeholder="Enter Email">
+                            <input class="form-control @error('email') is-invalid @enderror" type="text" name="email"
+                                id="email" value="{{ $employee->email }}" placeholder="Enter Email">
                             @error('email')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -59,8 +58,7 @@
                                     }
                                 @endphp
                                 @foreach ($positions as $position)
-                                    <option value="{{ $position->id }}"
-                                        {{ $selected == $position->id ? 'selected' : '' }}>
+                                    <option value="{{ $position->id }}" {{ $selected == $position->id ? 'selected' : '' }}>
                                         {{ $position->code . '-' . $position->name }}</option>
                                 @endforeach
                             </select>
@@ -68,7 +66,19 @@
                                 <div class="text-danger"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
-
+                        <div class="col-md-12 mb-3">
+                            <label for="cv" class="form-label">Curriculum Vitae (CV)</label>
+                            @if ($employee->original_filename)
+                                <p style="font-weight: bold">CV LAMA: {{ $employee->original_filename }}</p>
+                                <a href="{{ route('employees.downloadFile', ['employeeId' => $employee->id]) }}"
+                                    class="btn btn-primary btn-sm mt-2">
+                                    <i class="bi bi-download me-1"></i> Download CV
+                                </a>
+                            @else
+                                <p style="font-weight: bold">Tidak Ada</p>
+                            @endif
+                            <input type="file" class="form-control" name="cv" id="cv">
+                        </div>
                     </div>
                     <hr>
                     <div class="row">
